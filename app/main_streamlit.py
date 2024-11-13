@@ -31,13 +31,10 @@ if 'vectordb' not in st.session_state or 'chain' not in st.session_state:
     st.session_state.chain = chain
 
 # Initialize display chat history for Streamlit and LLM chat history separately
-# for display only
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
-# for LLM conversation history
 if "llm_chat_history" not in st.session_state:
     st.session_state.llm_chat_history = ChatHistory()
-
 
 st.title("🏫 AI Assistant for the UChicago MS-ADS Program")
 st.write("💡 Ask any questions about the MS-ADS Program")
@@ -47,19 +44,12 @@ for entry in st.session_state.chat_history:
     role = "👤" if entry["role"] == "user" else "🤖"
     st.write(f"**{role}:** {entry['content']}")
 
-# Add a unique key to input box to allow rerender
-if 'clear_input' not in st.session_state:
-    st.session_state.clear_input = False
+# Callback function to clear the input
+def clear_input():
+    st.session_state["user_input"] = ""
 
 # Chat input for user to type messages
-user_input = st.text_input("Enter your question here:", key="input_text" if not st.session_state.clear_input else "input_text_new")
-
-# Initialize session state for input text if not already set
-if 'user_input' not in st.session_state:
-    st.session_state.user_input = ""
-
-# Chat input for user to type messages
-user_input = st.text_input("Enter your question here:", key="user_input")
+user_input = st.text_input("Enter your question here:", key="user_input", on_change=clear_input)
 
 # Process the user's query and get a response
 if user_input:
@@ -84,5 +74,3 @@ if user_input:
             placeholder.markdown(f"**🤖:** {gradual_text}")
             time.sleep(0.05)
 
-    # Clear the input field by setting user_input to an empty string
-    st.session_state.user_input = ""
