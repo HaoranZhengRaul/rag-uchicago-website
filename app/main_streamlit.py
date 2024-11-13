@@ -54,6 +54,13 @@ if 'clear_input' not in st.session_state:
 # Chat input for user to type messages
 user_input = st.text_input("Enter your question here:", key="input_text" if not st.session_state.clear_input else "input_text_new")
 
+# Initialize session state for input text if not already set
+if 'user_input' not in st.session_state:
+    st.session_state.user_input = ""
+
+# Chat input for user to type messages
+user_input = st.text_input("Enter your question here:", key="user_input")
+
 # Process the user's query and get a response
 if user_input:
     # Add user query to display history
@@ -77,6 +84,5 @@ if user_input:
             placeholder.markdown(f"**🤖:** {gradual_text}")
             time.sleep(0.05)
 
-    # Toggle the input box key to reset the input field
-    st.session_state.clear_input = not st.session_state.clear_input
-    st.experimental_rerun()
+    # Clear the input field by setting user_input to an empty string
+    st.session_state.user_input = ""
